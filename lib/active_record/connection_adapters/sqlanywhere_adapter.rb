@@ -62,7 +62,7 @@ module ActiveRecord
     DEFAULT_CONFIG = { :username => 'dba', :password => 'sql' }
     # Main connection function to SQL Anywhere
     # Connection Adapter takes four parameters:
-    # * :database (required, no default). Corresponds to "DatabaseName=" in connection string
+    # * :database (optional, no default). Corresponds to "DatabaseName=" in connection string
     # * :server (optional, defaults to :databse). Corresponds to "ServerName=" in connection string
     # * :username (optional, default to 'dba')
     # * :password (optional, deafult to 'sql')
@@ -77,10 +77,8 @@ module ActiveRecord
       else
         config = DEFAULT_CONFIG.merge(config)
 
-        raise ArgumentError, "No database name was given. Please add a :database option." unless config.has_key?(:database)
-
         connection_string  = "ServerName=#{(config[:server] || config[:database])};"
-        connection_string += "DatabaseName=#{config[:database]};"
+        connection_string += "DatabaseName=#{config[:database]};" if config.has_key?(:database)
         connection_string += "UserID=#{config[:username]};"
         connection_string += "Password=#{config[:password]};"
         connection_string += "CommLinks=#{config[:commlinks]};" unless config[:commlinks].nil?
